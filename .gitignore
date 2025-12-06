@@ -1,0 +1,49 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.classpath
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env
+.venv/
+venv/
+env/
+*.egg-info/
+.ipynb_checkpoints/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build outputs
+build/
+dist/
+*.o
+*.out
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
