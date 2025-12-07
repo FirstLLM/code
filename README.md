@@ -6,6 +6,9 @@ Companion notebooks for *[Build Your First LLM](https://leanpub.com/FirstLLM/)*.
 - Chapter 5: Your First Python Program — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch05.ipynb)
 - Chapter 6: NumPy & PyTorch Survival Guide — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch06.ipynb)
 - Chapter 7: Preparing Your Data — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch07.ipynb)
+- Chapter 8: Building the Tokenizer — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch08.ipynb)
+- Chapter 9: The Embedding Layer — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch09.ipynb)
+- Chapter 10: Attention Is All You Need — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch10.ipynb)
 
 ## How to run
 
