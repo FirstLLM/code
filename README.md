@@ -11,6 +11,7 @@ Companion notebooks for *[Build Your First LLM](https://leanpub.com/FirstLLM/)*.
 - Chapter 10: Attention Is All You Need — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch10.ipynb)
 - Chapter 11: Building the Transformer — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch11.ipynb)
 - Chapter 12: Training Your Model — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch12.ipynb)
+- Chapter 13: Fine-Tuning Your Model — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch13.ipynb)
 
 ## How to run
 
