@@ -21,6 +21,11 @@ Companion code and notebooks for *[Build Your First LLM](https://leanpub.com/Fir
 - Chapter 14: Prompt Engineering — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch14.ipynb)
 - Chapter 15: Building Applications — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch15.ipynb)
 
+**Part V: Deploy**
+- Chapter 16: Preparing for Production — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch16.ipynb)
+- Chapter 17: Deployment Options — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch17.ipynb)
+- Chapter 18: What's Next — [Open in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch18.ipynb)
+
 ---
 
 ## LLM Helper (`llm_helper.py`)
