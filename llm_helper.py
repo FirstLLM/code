@@ -9,15 +9,15 @@ Supported providers:
 - openrouter: OpenRouter (free models available)
 - openai: OpenAI API (paid)
 
-Usage:
+Usage (choose one provider before importing this module):
+    import os
+    os.environ["LLM_PROVIDER"] = "ollama"
     from llm_helper import chat
     response = chat("Explain quantum computing simply.")
     print(response)
 
-To switch providers:
-    import os
-    os.environ["LLM_PROVIDER"] = "google"
-    os.environ["GOOGLE_API_KEY"] = "your-key"
+For another provider, start a fresh process or kernel, configure its key
+through your environment, and select that provider before the import.
 """
 
 import os
@@ -26,12 +26,14 @@ import json
 # Get provider from environment, default to ollama
 PROVIDER = os.getenv("LLM_PROVIDER", "ollama")
 
-# Model defaults per provider
+# Model defaults per provider (verified 2026-11; see Appendix E)
+# Models and prices change monthly. If a default stops working, check the
+# provider's model list (Appendix E shows where) and override via model=...
 DEFAULT_MODELS = {
-    "ollama": "llama3.2",
-    "google": "gemini-1.5-flash",
-    "openrouter": "meta-llama/llama-3.2-3b-instruct:free",
-    "openai": "gpt-3.5-turbo"
+    "ollama": "qwen3.5:4b",
+    "google": "gemini-3.5-flash-lite",
+    "openrouter": "openrouter/free",
+    "openai": "gpt-6-luna"
 }
 
 
@@ -41,8 +43,9 @@ def chat(prompt, system="You are a helpful assistant.", temperature=0.7, model=N
 
     Args:
         prompt: The user's message
-        system: System prompt setting the assistant's behavior
-        temperature: Creativity (0.0 = deterministic, 1.0 = creative)
+        temperature: Sampling setting, not a portable unit: each provider
+            maps it differently (ranges and defaults differ), so the same
+            value does not mean the same randomness across providers
         model: Override the default model for this provider
 
     Returns:
@@ -86,6 +89,12 @@ def _chat_ollama(prompt, system, temperature, model):
 
 def _chat_google(prompt, system, temperature, model):
     """Chat using Google AI Studio (Gemini)."""
+    return _google_generate([{"role": "user", "parts": [{"text": prompt}]}],
+                            system, temperature, model)
+
+
+def _google_generate(contents, system, temperature, model):
+    """Send a Gemini generateContent request and extract the reply text."""
     import requests
 
     api_key = os.getenv("GOOGLE_API_KEY")
@@ -94,19 +103,38 @@ def _chat_google(prompt, system, temperature, model):
 
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
 
-    # Gemini uses a different format - combine system and user prompts
-    full_prompt = f"{system}\n\nUser: {prompt}"
-
+    # Keep roles intact: the system prompt goes in system_instruction and
+    # the conversation in contents (role "user"/"model"), never flattened
+    # into one blob of text.
     response = requests.post(url, json={
-        "contents": [{"parts": [{"text": full_prompt}]}],
+        "system_instruction": {"parts": [{"text": system}]},
+        "contents": contents,
         "generationConfig": {"temperature": temperature}
     }, timeout=60)
 
     if response.status_code != 200:
         raise RuntimeError(f"Google AI error: {response.text}")
 
-    data = response.json()
-    return data["candidates"][0]["content"]["parts"][0]["text"]
+    return _google_reply_text(response.json())
+
+
+def _google_reply_text(data):
+    """Extract text from a Gemini response; blocked/empty replies raise."""
+    block = data.get("promptFeedback", {}).get("blockReason")
+    if block:
+        raise RuntimeError(f"Google AI blocked the prompt ({block}). Rephrase your message.")
+    candidates = data.get("candidates") or []
+    if not candidates:
+        raise RuntimeError("Google AI returned no candidates (empty response). Try again or rephrase.")
+    candidate = candidates[0]
+    reason = candidate.get("finishReason", "")
+    if reason in ("SAFETY", "RECITATION", "PROHIBITED_CONTENT", "BLOCKLIST"):
+        raise RuntimeError(f"Google AI blocked the response ({reason}). Rephrase your message.")
+    parts = candidate.get("content", {}).get("parts") or []
+    text = "".join(p.get("text", "") for p in parts)
+    if not text.strip():
+        raise RuntimeError(f"Google AI returned empty text (finishReason={reason or 'unknown'}). Try again.")
+    return text
 
 
 def _chat_openrouter(prompt, system, temperature, model):
@@ -178,7 +206,7 @@ def chat_with_history(messages, system="You are a helpful assistant.", temperatu
     Args:
         messages: List of {"role": "user"|"assistant", "content": "..."} dicts
         system: System prompt
-        temperature: Creativity level
+        temperature: Sampling setting (provider-dependent, see chat())
         model: Override default model
 
     Returns:
@@ -189,7 +217,8 @@ def chat_with_history(messages, system="You are a helpful assistant.", temperatu
     if PROVIDER == "ollama":
         return _chat_history_ollama(messages, system, temperature, model)
     elif PROVIDER in ("google", "openrouter", "openai"):
-        # These providers support the messages format natively
+        # OpenAI-compatible providers take messages; Gemini gets its own
+        # contents/system_instruction format inside the dispatcher below
         return _chat_history_openai_format(messages, system, temperature, model)
     else:
         raise ValueError(f"Unknown provider: {PROVIDER}")
@@ -221,9 +250,14 @@ def _chat_history_openai_format(messages, system, temperature, model):
     import requests
 
     if PROVIDER == "google":
-        # Google doesn't support message history the same way, flatten it
-        history_text = "\n".join([f"{m['role']}: {m['content']}" for m in messages])
-        return _chat_google(history_text, system, temperature, model)
+        # Gemini speaks contents with roles: "user" stays, "assistant"
+        # becomes "model". System prompt goes in system_instruction.
+        contents = [
+            {"role": "model" if m["role"] == "assistant" else m["role"],
+             "parts": [{"text": m["content"]}]}
+            for m in messages
+        ]
+        return _google_generate(contents, system, temperature, model)
 
     elif PROVIDER == "openrouter":
         api_key = os.getenv("OPENROUTER_API_KEY")
