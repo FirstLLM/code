@@ -1,10 +1,10 @@
 # Build Your First LLM — companion files
 
-Use the companion supplied with your edition of *[Build Your First LLM](https://leanpub.com/FirstLLM/)*. In this guide **package root** means the extracted directory containing this README, `llm_helper.py`, `data/`, and `notebooks/`. In the author’s checkout only, that directory is `resources/code/`.
+The current companion for *[Build Your First LLM](https://leanpub.com/FirstLLM/)* lives on [`main`](https://github.com/FirstLLM/code/tree/main). Open the notebook for your edition and chapter directly from the book. No ZIP or repository clone is required.
 
 ## Choose your notebook
 
-The following links open the English notebook files **in this revision**. For the same chapter in another language, open the matching filename in [Türkçe](notebooks/tr/), [Deutsch](notebooks/de/), or [Русский](notebooks/ru/).
+The links below open the English notebook sources. The same `chNN.ipynb` filenames are available under [Türkçe](notebooks/tr/), [Deutsch](notebooks/de/), [Русский](notebooks/ru/), and [Ελληνικά](notebooks/el/). For example, [open Chapter 5 directly in Colab](https://colab.research.google.com/github/FirstLLM/code/blob/main/notebooks/ch05.ipynb).
 
 | Chapter | Notebook |
 |---|---|
@@ -25,8 +25,8 @@ The following links open the English notebook files **in this revision**. For th
 
 ## Start a notebook
 
-- **Colab:** extract the download on your computer. Choose **File → Upload notebook** and select the `.ipynb` for your language. Start with its Setup instructions. Upload any additional files through the **Files** pane; uploading a notebook does not upload its neighbouring files. A runtime reset can discard uploads: keep a copy of handoff files on your computer.
-- **Jupyter or VS Code:** create a virtual environment with `python -m venv .venv`, activate it, then run `python -m pip install jupyter ipykernel`. Open the notebook with that environment selected as the kernel. Run its own Setup before the examples; use the kernel’s interpreter for installs. Use an empty, writable working directory for each chapter.
+- **Colab:** use the chapter’s Colab link, or use **File → Open notebook → GitHub** and paste the GitHub notebook URL. Run the Setup cell first. Opening a notebook from GitHub does **not** copy its neighboring files into the runtime. Upload any additional files through **Files**; a runtime reset can discard uploads and generated files.
+- **Jupyter or VS Code:** download the notebook you want from its GitHub page. Create a virtual environment with `python -m venv .venv`, activate it, and run `python -m pip install jupyter ipykernel`. Select that environment as the kernel and run the notebook’s Setup before the examples. Use an empty, writable working directory for each chapter.
 
 For example, Chapter 5 uses `transformers==5.23.0 torch==2.15.0`; Chapter 8 Setup uses `tiktoken==0.14.0 transformers==5.23.0 torch==2.15.0`; Chapters 12–13 use `torch==2.15.0 transformers==5.23.0 tqdm==4.70.1 numpy==2.3.5 matplotlib==3.10.7`. These are chapter-specific requirements, not a reason to install every package before the first exercise. Initial model and dependency downloads may need internet access. Chapter 5 does **not** need the helper, training data, or a provider key.
 
@@ -38,7 +38,7 @@ For example, Chapter 5 uses `transformers==5.23.0 torch==2.15.0`; Chapter 8 Setu
 
 ## Use the helper in Chapters 14–16
 
-Copy [llm_helper.py](llm_helper.py) **from this package root** beside the notebook in the kernel’s working directory. In Colab upload it to `/content/` before the first import; repeat on a fresh runtime. Check `Path.cwd()` from `pathlib` if Python cannot find the file.
+Download [`llm_helper.py`](https://raw.githubusercontent.com/FirstLLM/code/main/llm_helper.py) from the repository root and place it in the kernel’s working directory before importing it. In Colab upload it to `/content/` and repeat on a fresh runtime. If you are working from a local clone or an older release, use the helper from the same revision as the notebook. Check `Path.cwd()` if Python cannot find the file.
 
 Choose **one** provider before importing the helper. This example selects local Ollama (requires a running local service and model for generation):
 
