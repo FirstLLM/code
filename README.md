@@ -40,7 +40,7 @@ For example, Chapter 5 uses `transformers==5.23.0 torch==2.15.0`; Chapter 8 Setu
 
 Download [`llm_helper.py`](https://raw.githubusercontent.com/FirstLLM/code/main/llm_helper.py) from the repository root and place it in the kernel’s working directory before importing it. In Colab upload it to `/content/` and repeat on a fresh runtime. If you are working from a local clone or an older release, use the helper from the same revision as the notebook. Check `Path.cwd()` if Python cannot find the file.
 
-Choose **one** provider before importing the helper. This example selects local Ollama (requires a running local service and model for generation):
+Choose **one** provider before importing the helper. For local Ollama, start the service and run `ollama pull lfm3`. The helper selects the downloaded `lfm3:latest` tag.
 
 ```python
 import os

@@ -30,7 +30,7 @@ PROVIDER = os.getenv("LLM_PROVIDER", "ollama")
 # Models and prices change monthly. If a default stops working, check the
 # provider's model list (Appendix E shows where) and override via model=...
 DEFAULT_MODELS = {
-    "ollama": "qwen3.5:4b",
+    "ollama": "lfm3:latest",
     "google": "gemini-3.5-flash-lite",
     "openrouter": "openrouter/free",
     "openai": "gpt-6-luna"
